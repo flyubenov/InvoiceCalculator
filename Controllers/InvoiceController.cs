@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using CsvHelper;
+using InvoiceCalculator.Models;
+using InvoiceCalculator.Services;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,35 +33,30 @@ namespace InvoiceCalculator.Controllers
             return View("Index");
         }
 
+        [Route("Error")]
+        [HttpGet]
+        public IActionResult HandleErrors()
+        {
+            var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            return Problem(context.Error.Message);
+        }
+
         [Route("save")]
         [HttpPost("save")]
-        public IActionResult Save(IFormFile file)
+        public IActionResult Save(InvoiceUploadModel model)
         {
-            if (file == null || file.Length == 0)
+            if (model.InvoiceData == null || model.InvoiceData.Length == 0)
             {
                 return Content("File not selected");
             }
             else
             {
-                var result = new StringBuilder();
-                using (var reader = new StreamReader(file.OpenReadStream()))
-                {
-                    while (reader.Peek() >= 0)
-                        result.AppendLine(reader.ReadLine());
-                }
-                var a = result.ToString();
-                return Content(a);
-
-
-
-                //var stream = new MemoryStream();
-                //photo.CopyToAsync(stream);
-                //StreamReader reader = new StreamReader(stream);
-                //string text = reader.ReadToEnd();
+                var invoiceTotalAmount = new InvoiceCalculatorService().ProcessInvoices(model);              
+                return View("Result", new InvoiceTotalAmountResultModel { InvoiceTotalAmount= invoiceTotalAmount, Currency = model.OutputCurrency});              
             }
-
-            return View("Success");
         }
+
+        
 
     }
 }

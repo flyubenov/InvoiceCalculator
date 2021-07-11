@@ -1,4 +1,7 @@
-﻿<html>
+﻿@model InvoiceCalculator.Models.InvoiceUploadModel
+@using InvoiceCalculator.Models
+
+<html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
@@ -6,16 +9,31 @@
 <body>
 
     <form asp-controller="invoice" asp-action="save" method="post" enctype="multipart/form-data">
-        <table cellpadding="2" cellspacing="2">           
+        <table cellpadding="2" cellspacing="2">
             <tr>
-                <td>Invoice</td>
+                <td>Upload invoice file: </td>
                 <td>
-                    <input type="file" name="file" />
+                    <input type="file" name="InvoiceData" />
                 </td>
             </tr>
             <tr>
+                <td>Select output currency</td>
+                <td>
+                    <select asp-for="OutputCurrency" asp-items="Html.GetEnumSelectList<Currency>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Enter exchange rates e.g. EUR:1,USD:0.987,GBP:0.878</td>
+
+                <td>
+                    <input type="text" name="ListOfExchangeRates">
+                </td>
+            </tr>                           
+            <tr>
                 <td>&nbsp;</td>
-                <td><input type="submit" value="Save" /></td>
+                <td><input type="submit" value="Submit and calucalte total invoice amount" /></td>
             </tr>
         </table>
     </form>

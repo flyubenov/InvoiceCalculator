@@ -1,2 +1,14 @@
 ﻿
-@model string
+@model InvoiceCalculator.Models.InvoiceTotalAmountResultModel
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Invoices Total Amount</title>
+</head>
+<body>
+    <div>
+        Invoices Total Amount: @Model.InvoiceTotalAmount @Model.Currency
+    </div>       
+</body>
+</html>
