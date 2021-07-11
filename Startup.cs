@@ -14,7 +14,7 @@ namespace InvoiceCalculator
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(); //add mvc
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
